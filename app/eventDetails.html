@@ -6,11 +6,12 @@
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/app.css">
 </head>
-<body>
+<body ng-cloak>
 	<div class="container">
 		<div class="navbar">
 			<div class="navbar-inner">
 				<ul class="nav">
+					<li><a href="/newevent.html">Create New Event</a></li>
 				</ul>
 			</div>
 		</div>
@@ -19,12 +20,14 @@
 			<img ng-src="{{event.imageUrl}}" alt="{{event.name}}">
 			<div class="row">
 				<div class="spann11">
-					<h2>{{event.name}}</h2>
+					<h2> {{event.name|uppercase}} </h2>
 				</div>
 			</div>
-			<div class="row">
+			<div ng-show="boolValue">Show this</div>
+			<div ng-hide="boolValue">Hide thisWK</div>
+	           		<div class="row">
 				<div class="span3">
-					<div><strong>Date:</strong>{{event.date}}</div>
+					<div><strong>Date:</strong>{{event.date|date:'medium'}}</div>
 					<div><strong>Time:</strong>{{event.time}}</div>
 				</div>
 			
@@ -40,8 +43,21 @@
 			</div>
 			<hr/>
 			<h3>Sessions</h3>
+			order by:
+			<select ng-model="sortIndex" class="input-small">
+				<option selected value="name">Name</option>
+				<option  value="upVoteCount">Vote Count</option>
+			</select>
+			Filter by:
+			<select ng-model="query.level" class="input-small">
+				<option selected value="">All</option>
+				<option  value="Advanced">Advanced</option>
+				<option  value="Medium">Medium</option>
+				<option  value="Introductory">Introductory</option>
+			</select>
 			<ul class="thumbnails">
-				<li ng-repeat="session in event.sessions">
+				<li ng-repeat="session in event.sessions | orderBy:sortIndex |limitTo:3 | filter:query">
+					<div>{{session}}</div>
 					<div class="row session">
 						<div class="span0 well votingWidget">
 							<div class="votingButton">
